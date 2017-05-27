@@ -22,13 +22,13 @@ import io.microprofile.showcase.schedule.model.adapters.LocalDateAdapter;
 import io.microprofile.showcase.schedule.model.adapters.LocalTimeAdapter;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ScheduleDAO {
 
@@ -40,7 +40,13 @@ public class ScheduleDAO {
         this.bootstrapData = bootstrapData;
         initStore();
     }
-    
+
+    public List<Schedule> getAllSchedules(int limit) {
+        return scheduleMap.values().stream()
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
     private final AtomicInteger sequence = new AtomicInteger(0);
 
     private final Map<String, Schedule> scheduleMap = new ConcurrentHashMap<>();
@@ -68,8 +74,9 @@ public class ScheduleDAO {
                         }
 
                         // generate a new key
-                        if (null == venueId)
+                        if (null == venueId) {
                             venueId = String.valueOf(sequence.incrementAndGet());
+                        }
 
                         final Schedule sched = new Schedule(
                                 bootstrap.getId(),
@@ -81,7 +88,6 @@ public class ScheduleDAO {
                                 Duration.ofMinutes(new Double(bootstrap.getLength()).longValue())
                         );
 
-
                         scheduleMap.put(bootstrap.getId(), sched);
                         venues.put(venueId, sched.getVenue());
 
@@ -91,10 +97,6 @@ public class ScheduleDAO {
 
                 });
 
-    }
-
-    public List<Schedule> getAllSchedules() {
-        return new ArrayList<>(scheduleMap.values());
     }
 
 }

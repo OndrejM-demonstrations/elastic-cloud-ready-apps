@@ -24,6 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import javax.ws.rs.*;
 
 @Path("/")
 @Produces("application/json")
@@ -33,8 +34,8 @@ public class ScheduleResource {
 
     @GET
     @Path("/all")
-    public Response allSchedules() {
-        final List<Schedule> allSchedules = scheduleDAO.getAllSchedules();
+    public Response allSchedules(@QueryParam("count") Integer count) {
+        final List<Schedule> allSchedules = scheduleDAO.getAllSchedules(count != null ? count : 100);
         final GenericEntity<List<Schedule>> entity = buildEntity(allSchedules);
         return Response.ok(entity).build();
     }
