@@ -25,12 +25,13 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import javax.ws.rs.*;
+import mihalyi.scaling.caching.CachedScheduleDAO;
 
 @Path("/")
 @Produces("application/json")
 public class ScheduleResource {
 
-    private final ScheduleDAO scheduleDAO = ScheduleDAO.INSTANCE;
+    private final ScheduleDAO scheduleDAO = CachedScheduleDAO.INSTANCE;
 
     @GET
     @Path("/all")
