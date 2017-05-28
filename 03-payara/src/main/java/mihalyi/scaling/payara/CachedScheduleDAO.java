@@ -5,6 +5,7 @@
  *************************************************** */
 package mihalyi.scaling.payara;
 
+import fish.payara.cdi.jsr107.impl.NamedCache;
 import io.microprofile.showcase.bootstrap.BootstrapData;
 import io.microprofile.showcase.schedule.model.Schedule;
 import io.microprofile.showcase.schedule.persistence.ScheduleDAO;
@@ -25,6 +26,8 @@ import javax.inject.Inject;
 @ApplicationScoped
 public class CachedScheduleDAO extends ScheduleDAO {
 
+    @Inject
+    @NamedCache(cacheName = "cachedSchedules")
     Cache<String, Schedule> cachedSchedules;
 
     public CachedScheduleDAO() {
@@ -34,8 +37,6 @@ public class CachedScheduleDAO extends ScheduleDAO {
     public CachedScheduleDAO(BootstrapData bootstrapData) {
         super(bootstrapData);
         MutableConfiguration<String, Schedule> config = new MutableConfiguration<>();
-        cachedSchedules = Caching.getCachingProvider().getCacheManager()
-                .createCache("cachedSchedules", config);
     }
 
     @Override
