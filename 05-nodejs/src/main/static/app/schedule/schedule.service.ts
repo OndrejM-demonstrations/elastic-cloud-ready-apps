@@ -10,17 +10,14 @@ export class ScheduleService {
 
     private schedules: Schedule[];
     private endPoint: Endpoint;
+    private hazelcastClient: any;
 
     constructor(private http: Http, private endpointsService: EndpointsService) {
     }
 
     init(callback: () => void): void {
 
-        if (undefined != this.endPoint) {
-            callback();
-        } else {
-            this.endpointsService.getEndpoint("schedule").then(endPoint => this.setEndpoint(endPoint)).then(callback).catch(this.handleError);
-        }
+        callback();
     }
 
     setEndpoint(endPoint: Endpoint): void {
@@ -33,7 +30,7 @@ export class ScheduleService {
             return Promise.resolve(this.schedules);
         }
 
-        return this.http.get(this.endPoint.url + '/all')
+        return this.http.get('/api/schedules')
             .toPromise()
             .then(response => this.setSchedules(response.json()))
             .catch(this.handleError);

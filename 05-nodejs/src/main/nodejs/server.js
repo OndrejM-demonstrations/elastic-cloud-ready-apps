@@ -20,47 +20,62 @@ if (!fs.existsSync(rootDir)) {
     var rootDir = __dirname + "/../../../target/static-resources";
 }
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-
 var port = process.env.PORT || 3000;        // set our port
 
-// ROUTES FOR OUR API
-// =============================================================================
-var router = express.Router();              // get an instance of the express Router
+startServer();
+//testHz();
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', function (req, res) {
-    res.json({message: 'hooray! welcome to our api!'});
-});
+function configureServer(app, hzClient) {
+    // configure app to use bodyParser()
+    // this will let us get the data from a POST
+    app.use(bodyParser.urlencoded({extended: true}));
+    app.use(bodyParser.json());
 
-// more routes for our API will happen here
+    // ROUTES FOR OUR API
+    // =============================================================================
+    var router = express.Router();              // get an instance of the express Router
 
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
+    // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+    router.get('/', function (req, res) {
+        res.json({message: 'hooray! welcome to our api!'});
+    });
+    router.get('/schedules', function (req, res) {
+        map = hzClient.getMap("cachedSchedules");
+        map.values()
+                .then(function (values) {
+                    res.json(arrayOfJsonToObj(values));
+                });
+    });
 
-// static files
-app.use('/app', express.static(path.join(rootDir, 'app')));
-app.use('/assets', express.static(path.join(rootDir, 'assets')));
-app.get('/*', function (req, res) {
-    res.sendfile(path.join(rootDir, 'index.html'));
-});
+    // more routes for our API will happen here
+
+    // REGISTER OUR ROUTES -------------------------------
+    // all of our routes will be prefixed with /api
+    app.use('/api', router);
+
+    // static files
+    app.use('/app', express.static(path.join(rootDir, 'app')));
+    app.use('/assets', express.static(path.join(rootDir, 'assets')));
+    app.get('/*', function (req, res) {
+        res.sendfile(path.join(rootDir, 'index.html'));
+    });
+}
 
 // START THE SERVER
 // =============================================================================
 
-//startServer();
-testHz();
-
 function startServer() {
-    app.listen(port);
-    console.log('Magic happens on port ' + port);
+    initHazelcast()
+            .then(function (hzClient) {
+                configureServer(app, hzClient);
+                app.listen(port);
+                console.log('Magic happens on port ' + port);
+
+            });
 }
 
-function testHz() {
+// returns Promise of HazelcastClient
+function initHazelcast() {
     var HazelcastClient = require('hazelcast-client').Client;
     var Config = require('hazelcast-client').Config;
     var config = new Config.ClientConfig();
@@ -70,9 +85,12 @@ function testHz() {
         {host: '127.0.0.1', port: '5902'}];
     config.groupConfig.name = "development";
     config.groupConfig.password = "D3v3l0pm3nt";
-    var map = {};
-    HazelcastClient
-            .newHazelcastClient(config)
+    return HazelcastClient
+            .newHazelcastClient(config);
+}
+
+function testHz() {
+    initHazelcast()
             .then(function (hazelcastClient) {
                 map = hazelcastClient.getMap("cachedSchedules");
                 return map.size();
@@ -88,7 +106,16 @@ function testHz() {
             })
             .then(function (values) {
                 console.log("Values: " + values);
+                console.log("Object: " + arrayOfJsonToObj(values));
             })
             ;
 
+}
+
+function arrayOfJsonToObj(values) {
+    var objValues = [];
+    for (var i = 0; i < values.length; i++) {
+        objValues.push(JSON.parse(values[i]));
+    }
+    return objValues;
 }
