@@ -12,8 +12,6 @@ import io.microprofile.showcase.schedule.persistence.ScheduleDAO;
 import java.util.*;
 import java.util.stream.StreamSupport;
 import javax.cache.Cache;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
@@ -36,7 +34,6 @@ public class CachedScheduleDAO extends ScheduleDAO {
     @Inject
     public CachedScheduleDAO(BootstrapData bootstrapData) {
         super(bootstrapData);
-        MutableConfiguration<String, Schedule> config = new MutableConfiguration<>();
     }
 
     @Override

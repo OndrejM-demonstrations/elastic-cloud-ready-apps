@@ -22,3 +22,7 @@
 hs_err_pid*
 /01-simple-app/target/
 /02-caching/target/
+/03-payara/target/
+/04-payara-micro-clear-cache/target/
+/05-nodejs/target/
+**/node_modules/
