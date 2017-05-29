@@ -61,5 +61,34 @@ function startServer() {
 }
 
 function testHz() {
+    var HazelcastClient = require('hazelcast-client').Client;
+    var Config = require('hazelcast-client').Config;
+    var config = new Config.ClientConfig();
+    config.networkConfig.addresses = [
+        {host: '127.0.0.1', port: '5900'},
+        {host: '127.0.0.1', port: '5901'},
+        {host: '127.0.0.1', port: '5902'}];
+    config.groupConfig.name = "development";
+    config.groupConfig.password = "D3v3l0pm3nt";
+    var map = {};
+    HazelcastClient
+            .newHazelcastClient(config)
+            .then(function (hazelcastClient) {
+                map = hazelcastClient.getMap("cachedSchedules");
+                return map.size();
+                // do stuff with map
+            })
+            .then(function (size) {
+                console.log("Map size: " + size);
+                return map.keySet();
+            })
+            .then(function (keySet) {
+                console.log("keys: " + keySet);
+                return map.values();
+            })
+            .then(function (values) {
+                console.log("Values: " + values);
+            })
+            ;
 
 }

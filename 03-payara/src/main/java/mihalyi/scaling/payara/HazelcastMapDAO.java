@@ -9,10 +9,12 @@ package mihalyi.scaling.payara;
 import com.hazelcast.core.HazelcastInstance;
 import io.microprofile.showcase.bootstrap.BootstrapData;
 import io.microprofile.showcase.schedule.model.Schedule;
+import java.io.StringWriter;
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
+import javax.json.Json;
 
 /**
  *
@@ -35,8 +37,14 @@ public class HazelcastMapDAO extends CachedScheduleDAO {
     @Override
     protected void cacheSchedule(Schedule schedule) {
         super.cacheSchedule(schedule);
-        hazelcast.getMap("cachedSchedules").put(schedule.getId(), schedule);
+        hazelcast.getMap("cachedSchedules").put(schedule.getId(), toJSON(schedule));
     }
-    
+
+    private String toJSON(Schedule schedule) {
+        StringWriter stringWriter = new StringWriter();
+        Json.createWriter(stringWriter).writeObject(schedule.toJSONObject(Json.createObjectBuilder()));
+        return stringWriter.toString();
+    }
+
 }
 

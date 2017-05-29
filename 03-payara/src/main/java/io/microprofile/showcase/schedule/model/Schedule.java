@@ -19,6 +19,7 @@ import io.microprofile.showcase.schedule.model.adapters.DurationAdapter;
 import io.microprofile.showcase.schedule.model.adapters.LocalDateAdapter;
 import io.microprofile.showcase.schedule.model.adapters.LocalTimeAdapter;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -28,9 +29,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Objects;
+import javax.json.*;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Schedule implements Serializable {
 
     private String id;
@@ -38,13 +38,10 @@ public class Schedule implements Serializable {
     private String venue;
     private String venueId;
 
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate date;
 
-    @XmlJavaTypeAdapter(LocalTimeAdapter.class)
     private LocalTime startTime;
 
-    @XmlJavaTypeAdapter(DurationAdapter.class)
     private Duration duration;
 
     public Schedule() {
@@ -127,4 +124,16 @@ public class Schedule implements Serializable {
                 ", duration=" + duration +
                 '}';
     }
+
+    public JsonObject toJSONObject(JsonObjectBuilder builder) {
+        return Json.createObjectBuilder()
+                .add("id", id)
+                .add("sessionId", sessionId)
+                .add("venue", venue)
+                .add("date", date.toString())
+                .add("startTime", startTime.toString())
+                .add("duration", duration.toString()).build();
+    }
+    
+
 }
