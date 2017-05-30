@@ -43,6 +43,13 @@ public class ScheduleDAO {
 
     public List<Schedule> getAllSchedules(int limit) {
         return scheduleMap.values().stream()
+                .peek(_x -> {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ScheduleDAO.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                })
                 .limit(limit)
                 .collect(Collectors.toList());
     }
