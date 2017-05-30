@@ -38,11 +38,13 @@ public class CachedScheduleDAO extends ScheduleDAO {
         List<Schedule> result = getAllSchedulesFromCache(limit);
         if (result.size() < limit) {
             result = super.getAllSchedules(limit);
-            result.stream().forEach(schedule -> {
-                cachedSchedules.put(schedule.getId(), schedule);
-            });
+            result.stream().forEach(this::cacheSchedule);
         }
         return result;
+    }
+
+    protected void cacheSchedule(Schedule schedule) {
+        cachedSchedules.put(schedule.getId(), schedule);
     }
 
     private ArrayList<Schedule> getAllSchedulesFromCache(int limit) {
