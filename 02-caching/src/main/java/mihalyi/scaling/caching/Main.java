@@ -16,7 +16,7 @@ import javax.cache.Caching;
 public class Main {
 
     // Base URI the Grizzly HTTP server will listen on
-    public static final String BASE_URI = "http://localhost:8080/myapp/schedule/";
+    public static final String BASE_URI = "http://localhost:7080/myapp/schedule/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
