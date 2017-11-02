@@ -16,6 +16,7 @@
 package mihalyi.cloudready.resources;
 
 import fish.payara.cdi.jsr107.impl.NamedCache;
+import java.util.logging.Logger;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,6 +42,7 @@ public class TemperatureResource {
 
     private static final String JSON_TEMPERATURE = "temperature";
     private static final String JSON_TIMESTAMP = "timestamp";
+    private static Logger logger = Logger.getLogger(TemperatureResource.class.getName());
 
     @Inject
     @NamedCache(cacheName = "temperature")
@@ -71,6 +73,7 @@ public class TemperatureResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addTemperature(@NotNull JsonObject temperature) {
+        logger.info("Received temperature record, storing to cache");
         collectedTemperature.put(
                 temperature.getString(JSON_TIMESTAMP),
                 temperature.getInt(JSON_TEMPERATURE));

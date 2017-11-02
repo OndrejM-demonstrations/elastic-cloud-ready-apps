@@ -26,3 +26,6 @@ hs_err_pid*
 /04-payara-micro-clear-cache/target/
 /05-nodejs/target/
 **/node_modules/
+/01-temperature-sensor/target/
+/02-temperature-sensor/target/
+/01-temperature-collector/target/
