@@ -9,6 +9,8 @@ import javax.ejb.MessageDriven;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 /**
  *

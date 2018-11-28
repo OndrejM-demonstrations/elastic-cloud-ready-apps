@@ -10,11 +10,12 @@ import java.io.Serializable;
 import javax.ejb.Stateless;
 import javax.inject.Provider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
-/**
- * @author Mike Croft
- */
 @Stateless
+@Counted(monotonic = true, name = "outgoingMessages")
+@Timed(name = "timeSpentDispatchingStock")
 public class StockTicker implements Serializable {
 
     @Inject
@@ -27,7 +28,7 @@ public class StockTicker implements Serializable {
     private Provider<String> symbolConfig;
 
     @Schedule(hour = "*", minute = "*", second = "*/1", persistent = true)
-    private void generatePrice() {
+    public void generatePrice() {
         Stock stock = new Stock(symbolConfig.get(), "Conference stock", Math.random() * 100.0);
         stockEvents.fire(stock);
     }

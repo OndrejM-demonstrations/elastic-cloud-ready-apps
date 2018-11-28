@@ -13,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.sse.Sse;
 import javax.ws.rs.sse.SseBroadcaster;
 import javax.ws.rs.sse.SseEventSink;
+import org.eclipse.microprofile.metrics.annotation.Counted;
+import org.eclipse.microprofile.metrics.annotation.Timed;
 
 /**
  * @author Ondro Mihalyi
@@ -39,7 +41,9 @@ public class StockTickerResource {
         sseBroadcaster.register(eventSink);
     }
 
-    public void watch(
+    @Counted(monotonic = true, name = "incomingMessages")
+    @Timed(name = "timeSpentSendingStock")
+    public void broadcastToClients (
             @Observes
             @Inbound 
 //            @Kafka
