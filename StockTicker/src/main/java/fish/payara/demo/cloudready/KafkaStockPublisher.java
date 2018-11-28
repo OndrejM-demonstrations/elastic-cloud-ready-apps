@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.enterprise.event.Observes;
 import javax.resource.ConnectionFactoryDefinition;
+import javax.resource.spi.TransactionSupport.TransactionSupportLevel;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
 /**

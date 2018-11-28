@@ -18,6 +18,8 @@
   <body>
     <script type="text/javascript" src="js/highcharts.js"></script>
     <script type="text/javascript" src="js/modules/exporting.js"></script>
+    
+    <h1>Stock Ticker DEMO</h1>
 
     <div id="container" style="width: 80%; height: 80%; margin: 0 auto"></div>
 

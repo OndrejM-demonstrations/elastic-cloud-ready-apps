@@ -5,6 +5,7 @@ import fish.payara.micro.cdi.Inbound;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -38,7 +39,11 @@ public class StockTickerResource {
         sseBroadcaster.register(eventSink);
     }
 
-    public void watch(@Observes @Inbound Stock stock){
+    public void watch(
+            @Observes
+            @Inbound 
+//            @Kafka
+            Stock stock){
         sseBroadcaster.broadcast(sse.newEvent(stock.toString()));
     }
 

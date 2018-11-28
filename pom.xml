@@ -32,7 +32,8 @@
     </repositories>
 
     <properties>
-        <payara.version>5.184</payara.version>
+        <payara.version>5.183.2</payara.version>
+        <payara.api.version>5.183</payara.api.version>
         <payaramicro.maven.plugin.version>1.0.2</payaramicro.maven.plugin.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -80,7 +81,7 @@
             <dependency>
                 <groupId>fish.payara.api</groupId>
                 <artifactId>payara-api</artifactId>
-                <version>${payara.version}</version>
+                <version>${payara.api.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -147,7 +148,6 @@
                             <configuration>
                                 <daemon>false</daemon>
                                 <payaraVersion>${payara.version}</payaraVersion>
-                                <deployWar>true</deployWar>
                             </configuration>
                         </execution>
                         <execution>
